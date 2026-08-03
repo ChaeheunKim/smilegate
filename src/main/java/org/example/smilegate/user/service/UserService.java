@@ -1,0 +1,48 @@
+package org.example.smilegate.user.service;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.example.smilegate.config.global.JwtUtil;
+import org.example.smilegate.user.domain.User;
+import org.example.smilegate.user.dto.UserDTO;
+import org.example.smilegate.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+
+    //회원가입
+    public boolean Signup(UserDTO.UserSignupRequest request){
+        try{
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        User user = new User(request);
+        userRepository.save(user);
+        return true;
+        }
+          catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    //로그인
+    public UserDTO.UserLoginResponse login(UserDTO.UserSignupRequest request) throws IllegalAccessException {
+        User user = userRepository.findByEmail(request.getEmail());
+        if(user == null ){
+            throw new IllegalAccessException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
+        String perfix = "Bearer ";
+        String accesstoken = perfix + jwtUtil.createToken(user.getUsername(), user.getRole());
+        UserDTO.UserSignupRequest loginResponseDTO = new UserDTO.UserSignupRequest(user.getUsername(),user.getEmail(), user.getPassword(), user.getRole());
+
+        return new UserDTO.UserLoginResponse(loginResponseDTO.getEmail(),loginResponseDTO.getPassword(), accesstoken);
+    }
+}

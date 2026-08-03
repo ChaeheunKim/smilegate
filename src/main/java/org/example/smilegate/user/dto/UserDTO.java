@@ -1,0 +1,39 @@
+package org.example.smilegate.user.dto;
+
+import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.smilegate.user.domain.UserRole;
+
+public class UserDTO {
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class UserSignupRequest{
+        private String username;
+        @Column(nullable = false)
+        private String email;
+        @Column(nullable = false)
+        private String password;
+        private UserRole role;
+
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class UserLoginResponse{
+        @Column(nullable = false)
+        private String email;
+        @Column(nullable = false)
+        private String password;
+        private String accesstoken;
+
+    }
+
+
+
+
+}
