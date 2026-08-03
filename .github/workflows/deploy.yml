@@ -40,16 +40,14 @@ jobs:
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
-            cd /home/opc/app # 💡 경로가 opc로 변경됨
+            cd /home/opc/app 
             
-            CURRENT_PID=$(pgrep -f .jar)
-            if [ -z "$CURRENT_PID" ]; then
-              echo "현재 실행중인 애플리케이션이 없습니다."
-            else
-              echo "> kill -15 $CURRENT_PID"
-              kill -15 $CURRENT_PID || true
-              sleep 10
-            fi
+            sudo pkill -9 -f 'java -jar' || true
+            
+            sleep 5
             
             echo "새 애플리케이션 배포 시작"
             nohup java -Xmx512m -Xms512m -jar *SNAPSHOT.jar > app.log 2>&1 &
+            
+            sleep 2
+            exit 0
