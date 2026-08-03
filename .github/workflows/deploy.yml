@@ -49,7 +49,7 @@ jobs:
             sleep 10
             
             echo "새 애플리케이션 배포 시작"
-            nohup java -Xmx512m -Xms512m -jar *SNAPSHOT.jar > app.log 2>&1 &
+            nohup java -Xmx384m -Xms384m -jar *SNAPSHOT.jar > app.log 2>&1 &
             
             sleep 2
             ps -ef | grep java
