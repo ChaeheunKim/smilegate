@@ -42,26 +42,28 @@ jobs:
           script: |
             cd /home/opc/app 
             
+            # 1. 기존 실행 중인 자바 프로세스 종료
             sudo pkill -9 -f 'java -jar' || true
             sleep 3
             
-            ls -t *.jar | tail -n +2 | xargs rm -f || true
-        
+            # 2. plain.jar 제외 및 최신 JAR 파일명 가져오기 (⭐️ 누락되었던 핵심 코드)
+            JAR_NAME=$(ls -t *.jar | grep -v 'plain' | head -n 1)
+            echo "배포할 JAR 파일: $JAR_NAME"
             
-            sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
+            # 3. 이전 백업 jar 정리 (최신 1개만 남기고 삭제)
+            ls -t *.jar | grep -v "$JAR_NAME" | xargs rm -f || true
             
-            sleep 10
-            
-            echo "새 애플리케이션 배포 시작"
+            # 4. 메모리 옵션 적용하여 백그라운드 실행
             nohup java -Xms128m -Xmx256m -XX:+UseSerialGC -Xss256k -jar $JAR_NAME > app.log 2>&1 &
             
+            # 5. 구동 확인
             sleep 5
-                        if pgrep -f .jar > /dev/null
-                        then
-                          echo "Application started successfully!"
-                          exit 0
-                        else
-                          echo "Application failed to start. Check app.log"
-                          cat app.log
-                          exit 1
-                        fi
+            if pgrep -f 'java -jar' > /dev/null
+            then
+              echo "Application started successfully!"
+              exit 0
+            else
+              echo "Application failed to start. Check app.log below:"
+              cat app.log
+              exit 1
+            fi
