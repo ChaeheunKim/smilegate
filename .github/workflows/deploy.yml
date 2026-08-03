@@ -47,7 +47,7 @@ jobs:
               echo "현재 실행중인 애플리케이션이 없습니다."
             else
               echo "> kill -15 $CURRENT_PID"
-              kill -15 $CURRENT_PID
+              kill -15 $CURRENT_PID || true
               sleep 10
             fi
             
