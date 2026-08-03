@@ -53,7 +53,7 @@ jobs:
             sleep 10
             
             echo "새 애플리케이션 배포 시작"
-            nohup java -Xmx256m -Xms256m -jar *.jar > app.log 2>&1 &
+            nohup java -Xms128m -Xmx256m -XX:+UseSerialGC -Xss256k -jar $JAR_NAME > app.log 2>&1 &
             
             sleep 5
                         if pgrep -f .jar > /dev/null
