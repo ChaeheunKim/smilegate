@@ -39,5 +39,7 @@ jobs:
           host: ${{ secrets.ORACLE_HOST }}
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
+          envs: JWT_SECRET_KEY
           script: |
+            export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
             sh /home/ubuntu/app/deploy.sh
