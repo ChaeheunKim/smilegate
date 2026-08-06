@@ -39,5 +39,5 @@ jobs:
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
-            # 복잡한 명령 대신 서버에 만들어둔 스크립트만 딱 한 번 실행
+    
             sh /home/opc/app/deploy.sh
