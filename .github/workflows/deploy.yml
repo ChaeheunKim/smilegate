@@ -46,7 +46,7 @@ jobs:
             sudo pkill -9 -f 'java -jar' || true
             sleep 3
             
-            # 2. plain.jar 제외 및 최신 JAR 파일명 가져오기 (⭐️ 누락되었던 핵심 코드)
+            # 2. plain.jar 제외 및 최신 JAR 파일명 가져오기 
             JAR_NAME=$(ls -t *.jar | grep -v 'plain' | head -n 1)
             echo "배포할 JAR 파일: $JAR_NAME"
             
@@ -67,4 +67,3 @@ jobs:
               cat app.log
               exit 1
             fi
-            
