@@ -31,7 +31,6 @@ jobs:
           key: ${{ secrets.ORACLE_SSH_KEY }}
           source: "build/libs/*SNAPSHOT.jar"
           target: "/home/opc/app"
-          strip_components: 2
 
       - name: 오라클 서버에서 기존 앱 종료 후 새 앱 실행
         uses: appleboy/ssh-action@master
@@ -39,25 +38,28 @@ jobs:
           host: ${{ secrets.ORACLE_HOST }}
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
+          envs: ""
           script: |
-            cd /home/opc/app 
+            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
             
             # 1. 기존 실행 중인 자바 프로세스 종료
             sudo pkill -9 -f 'java -jar' || true
-            sleep 3
+            sleep 5
             
-            # 2. plain.jar 제외 및 최신 JAR 파일명 가져오기 
+            # 2. 최신 JAR 파일 찾기 (plain.jar 제외)
+            cd /home/opc/app
             JAR_NAME=$(ls -t *.jar | grep -v 'plain' | head -n 1)
             echo "배포할 JAR 파일: $JAR_NAME"
             
-            # 3. 이전 백업 jar 정리 (최신 1개만 남기고 삭제)
+            # 3. 이전 JAR 백업 (최신 1개만 남기고 삭제)
             ls -t *.jar | grep -v "$JAR_NAME" | xargs rm -f || true
             
-            # 4. 메모리 옵션 적용하여 백그라운드 실행
-            nohup java -Xms128m -Xmx256m -XX:+UseSerialGC -Xss256k -jar $JAR_NAME > app.log 2>&1 &
+            # 4. 메모리 최적화 + 백그라운드 실행 (disown 추가로 SSH 세션 종료 시 프로세스 유지)
+            nohup java -Xms64m -Xmx128m -XX:+UseSerialGC -Xss256k -jar "$JAR_NAME" > app.log 2>&1 &
+            disown
             
             # 5. 구동 확인
-            sleep 5
+            sleep 10
             if pgrep -f 'java -jar' > /dev/null
             then
               echo "Application started successfully!"
@@ -67,3 +69,4 @@ jobs:
               cat app.log
               exit 1
             fi
+
