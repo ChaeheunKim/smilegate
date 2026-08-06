@@ -31,6 +31,7 @@ jobs:
           key: ${{ secrets.ORACLE_SSH_KEY }}
           source: "build/libs/*SNAPSHOT.jar"
           target: "/home/ubuntu/app"
+          strip_components: 2
 
       - name: 오라클 서버에서 배포 스크립트 실행
         uses: appleboy/ssh-action@master
