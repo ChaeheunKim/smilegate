@@ -40,5 +40,3 @@ jobs:
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
             sh /home/opc/app/deploy.sh
-          
-        
