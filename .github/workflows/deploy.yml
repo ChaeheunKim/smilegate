@@ -40,3 +40,4 @@ jobs:
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
             sh /home/ubuntu/app/deploy.sh
+            
