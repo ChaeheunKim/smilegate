@@ -1,4 +1,4 @@
-name: Spring Boot CI/CD to Oracle Cloud
+name: Spring Boot CI/CD to Ubuntu
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           source: "build/libs/*SNAPSHOT.jar"
-          target: "/home/opc/app"
+          target: "/home/ubuntu/app"
 
       - name: 오라클 서버에서 배포 스크립트 실행
         uses: appleboy/ssh-action@master
@@ -39,4 +39,4 @@ jobs:
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
-            sh /home/opc/app/deploy.sh
+            sh /home/ubuntu/app/deploy.sh
