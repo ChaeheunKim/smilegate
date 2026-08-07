@@ -9,6 +9,10 @@ import org.example.smilegate.user.domain.User;
 import org.example.smilegate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -17,26 +21,42 @@ public class ProjectService {
     private final UserRepository userRepository;
 
     //프로젝트 게시글 생성
-    public boolean CreateProject(Long user_id, ProjectDTO.ProjectRequest RequestDTO) throws Exception {
+    public ProjectDTO.ProjectResponse CreateProject(Long user_id, ProjectDTO.ProjectRequest RequestDTO) throws Exception {
 
         User user = userRepository.findById(user_id).orElseThrow(()-> new Exception("사용자가 존재하지 않습니다."));
-        try{
+        try {
             Project project = new Project(RequestDTO);
-         projectRepository.save(project);
-         return true; }
-        catch (Exception e){
+            projectRepository.save(project);
+            ProjectDTO.ProjectResponse projectResponse = new ProjectDTO.ProjectResponse(project);
+            return projectResponse;
+        }
+            catch (Exception e){
             throw new Exception(e);
         }
 
     }
 
+    //프로젝트 목록 조회
+    public List<ProjectDTO.ProjectResponse> GetprojectIndex(){
+        try{
+        List<Project> projects = projectRepository.findAll();
+        List<ProjectDTO.ProjectResponse> projectResponses = projects.stream()
+                .map(project -> new ProjectDTO.ProjectResponse(
+                        project)).collect(Collectors.toList());
+        return projectResponses;} catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     //프로젝트 게시물 수정
-    public boolean UpdateProject(Long project_id, ProjectDTO.ProjectRequest RequestDTO) throws Exception{
+    public ProjectDTO.ProjectResponse UpdateProject(Long project_id, ProjectDTO.ProjectRequest RequestDTO) throws Exception{
         Project project = projectRepository.findById(project_id).orElseThrow(()-> new Exception("프로젝트가 존재하지 않습니다."));
         try{
             project.Update(RequestDTO);
             projectRepository.save(project);
-            return true;
+            ProjectDTO.ProjectResponse projectResponse = new ProjectDTO.ProjectResponse(project);
+            return projectResponse;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

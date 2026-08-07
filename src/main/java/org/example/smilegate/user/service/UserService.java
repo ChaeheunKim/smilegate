@@ -8,6 +8,7 @@ import org.example.smilegate.user.dto.UserDTO;
 import org.example.smilegate.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class UserService {
 
 
     //회원가입
-    public boolean Signup(UserDTO.UserSignupRequest request){
+    public boolean Signup(@RequestBody UserDTO.UserSignupRequest request){
         try{
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = new User(request);
@@ -34,7 +35,7 @@ public class UserService {
     }
 
     //로그인
-    public UserDTO.UserLoginResponse login(UserDTO.UserSignupRequest request) throws IllegalAccessException {
+    public UserDTO.UserLoginResponse login(UserDTO.UserLoginRequest request) throws IllegalAccessException {
         User user = userRepository.findByEmail(request.getEmail());
         if(user == null ){
             throw new IllegalAccessException("아이디 또는 비밀번호가 일치하지 않습니다.");

@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Project {
+public class Project extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -28,18 +28,18 @@ public class Project {
     @Column(nullable = false)
     List<String> partipants;
     String description;
-
+    @Enumerated(EnumType.STRING)
     ProjectCategory category;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     ProjectStatus status;
     String media_url;
     @Column(nullable = false)
     Integer view_count;
     String reject_reason;
-    LocalDateTime created_at;
-    LocalDateTime updated_at;
+    int like_count;
 
-    public Project(ProjectDTO.ProjectRequest request){
+    public Project(ProjectDTO.ProjectRequest request) {
         this.project_title=request.getProject_title();
         this.category=request.getCategory();
         this.media_url=request.getMedia_url();
@@ -48,8 +48,9 @@ public class Project {
         this.partipants=request.getPartipants();
         this.region=request.getRegion();
         this.status=request.getStatus();
-        this.view_count=request.getView_count();
+        this.view_count=0;
         this.year=request.getYear();
+        this.like_count=request.getLike_count();
     }
 
     public void Update(ProjectDTO.ProjectRequest request){
@@ -63,6 +64,7 @@ public class Project {
         this.status=request.getStatus();
         this.view_count=request.getView_count();
         this.year=request.getYear();
+        this.like_count=request.getLike_count();
     }
 
 }

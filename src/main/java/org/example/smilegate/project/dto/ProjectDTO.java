@@ -1,15 +1,18 @@
 package org.example.smilegate.project.dto;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.smilegate.project.domain.BaseTimeEntity;
+import org.example.smilegate.project.domain.Project;
 import org.example.smilegate.project.domain.ProjectCategory;
 import org.example.smilegate.project.domain.ProjectStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ProjectDTO {
+public class ProjectDTO  {
 
 
     @Getter
@@ -28,7 +31,25 @@ public class ProjectDTO {
         private String media_url;
         @Column(nullable = false)
         private Integer view_count;
+        private LocalDateTime created_at;
+        private LocalDateTime updated_at;
+        int like_count;
+
+        public ProjectResponse(Project project) {
+            this.project_title=project.getProject_title();
+            this.program_name=project.getProgram_name();
+            this.year=project.getYear();
+            this.region=project.getRegion();
+            this.category=project.getCategory();
+            this.status=project.getStatus();
+            this.media_url=project.getMedia_url();
+            this.view_count=project.getView_count();
+            this.created_at=project.getCreatedAt();
+            this.updated_at=project.getUpdatedAt();
+            this.like_count=project.getLike_count();
+        }
     }
+
 
     @Getter
     @Setter
@@ -51,5 +72,6 @@ public class ProjectDTO {
         @Column(nullable = false)
         private Integer view_count;
         private String reject_reason;
+        int like_count;
     }
 }

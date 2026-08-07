@@ -33,6 +33,18 @@ public class UserDTO {
 
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class UserLoginRequest{
+        @Column(nullable = false)
+        private String email;
+        @Column(nullable = false)
+        private String password;
+
+    }
+
+
 
 
 

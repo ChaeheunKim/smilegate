@@ -1,0 +1,41 @@
+package org.example.smilegate.user.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.example.smilegate.user.dto.UserDTO;
+import org.example.smilegate.user.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(value = "/api")
+public class UserController {
+    private final UserService userService;
+
+
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public UserDTO.UserLoginResponse Signin(@RequestBody UserDTO.UserLoginRequest request) throws IllegalAccessException {
+        try {
+            UserDTO.UserLoginResponse response = userService.login(request);
+            return response;
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping(value="/signup", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> Signup(@RequestBody UserDTO.UserSignupRequest request){
+        try{
+            userService.Signup(request);
+            return ResponseEntity.status(HttpStatus.OK).body("회원가입에 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("회원가입에 실패했습니다." + e);
+        }
+    }
+}

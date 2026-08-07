@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/css/**", "/js/**", "/login", "/signup",  "/", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/favicon.ico",
+                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/css/**", "/js/**", "/api/login", "/api/signup",  "/", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/favicon.ico",
                                 "/error").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/projects/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
