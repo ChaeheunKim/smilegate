@@ -43,3 +43,6 @@ jobs:
           script: |
             export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
             sh /home/ubuntu/app/deploy.sh
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
