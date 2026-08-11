@@ -1,32 +1,32 @@
-package org.example.smilegate.config.global;
+package org.example.smilegate.config.global.Jwt;
 
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void commence(
+    public void handle(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException authException
+            AccessDeniedException accessDeniedException
     ) throws IOException {
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
 
         ResponseEntity<?> body = ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("로그인이 필요합니다");
+                .body("접근 권한이 없습니다.");
 
         response.getWriter().write(objectMapper.writeValueAsString(body));
     }

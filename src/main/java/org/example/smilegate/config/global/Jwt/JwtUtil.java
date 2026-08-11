@@ -1,4 +1,4 @@
-package org.example.smilegate.config.global;
+package org.example.smilegate.config.global.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

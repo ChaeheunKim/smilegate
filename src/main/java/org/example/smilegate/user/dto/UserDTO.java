@@ -19,6 +19,7 @@ public class UserDTO {
         private String password;
         private UserRole role;
 
+
     }
 
     @Getter
@@ -44,8 +45,16 @@ public class UserDTO {
 
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class VerificationRequest{
+        @Column(nullable = false)
+        private String email;
 
+        private String code;
 
+    }
 
 
 }

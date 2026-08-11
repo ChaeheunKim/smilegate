@@ -74,4 +74,22 @@ public class ProjectDTO  {
         private String reject_reason;
         int like_count;
     }
+
+    @Getter
+    @Setter
+    public static class HomeResponse{
+        @Column(nullable = false)
+        private String project_title;
+        private ProjectCategory category;
+        @Column(nullable = false)
+        private ProjectStatus status;
+        private String media_url;
+
+        public HomeResponse(String projectTitle, ProjectCategory category, ProjectStatus status, String mediaUrl) {
+        this.project_title = projectTitle;
+        this.category = category;
+        this.status = status;
+        this.media_url = mediaUrl;
+        }
+    }
 }

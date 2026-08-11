@@ -49,6 +49,18 @@ public class ProjectService {
 
     }
 
+    public List<ProjectDTO.HomeResponse> Getprojecthome(){
+        try{
+            List<Project> projects = projectRepository.findAll();
+            List<ProjectDTO.HomeResponse> homeResponses = projects.stream()
+                    .map(project -> new ProjectDTO.HomeResponse(
+                            project.getProject_title(),project.getCategory(),project.getStatus(),project.getMedia_url())).collect(Collectors.toList());
+            return homeResponses;} catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     //프로젝트 게시물 수정
     public ProjectDTO.ProjectResponse UpdateProject(Long project_id, ProjectDTO.ProjectRequest RequestDTO) throws Exception{
         Project project = projectRepository.findById(project_id).orElseThrow(()-> new Exception("프로젝트가 존재하지 않습니다."));

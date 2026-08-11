@@ -25,11 +25,11 @@ public class User {
     UserRole role;
 
 
+
     public User(UserDTO.UserSignupRequest request){
         this.username=request.getUsername();
         this.email=request.getEmail();
         this.password=request.getPassword();
         this.role=UserRole.USER;
-
     }
 }

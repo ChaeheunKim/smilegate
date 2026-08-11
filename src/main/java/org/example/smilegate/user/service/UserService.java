@@ -2,10 +2,11 @@ package org.example.smilegate.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.smilegate.config.global.JwtUtil;
+import org.example.smilegate.config.global.Jwt.JwtUtil;
 import org.example.smilegate.user.domain.User;
 import org.example.smilegate.user.dto.UserDTO;
 import org.example.smilegate.user.repository.UserRepository;
+import org.example.smilegate.user.repository.VerifiacationCodeRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,15 +19,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final EmailVerficationService emailVerficationService;
+    private final VerifiacationCodeRepository verifiacationCodeRepository;
 
 
     //회원가입
     public boolean Signup(@RequestBody UserDTO.UserSignupRequest request){
-        try{
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        User user = new User(request);
-        userRepository.save(user);
-        return true;
+        try {
+            if (!emailVerficationService.isVerified(request.getEmail())) {
+                return false;
+            } else {
+                request.setPassword(passwordEncoder.encode(request.getPassword()));
+                User user = new User(request);
+                userRepository.save(user);
+                int deletecount = verifiacationCodeRepository.deleteAllByEmail(request.getEmail());
+                System.out.println("Deleted " + deletecount + " verification codes for email: " + request.getEmail());
+                return true;
+            }
         }
           catch (Exception e) {
             throw new RuntimeException(e);

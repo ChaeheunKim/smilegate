@@ -1,11 +1,8 @@
-package org.example.smilegate.config.global;
+package org.example.smilegate.config.global.Jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,7 +34,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/css/**", "/js/**", "/api/login", "/api/signup",  "/", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/favicon.ico",
+                        .requestMatchers("/css/**", "/js/**", "/api/login", "/api/signup/**", "/api/signup",  "/", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/favicon.ico",
                                 "/error").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/projects/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
