@@ -1,16 +1,19 @@
 package org.example.smilegate.user.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.example.smilegate.project.domain.Project;
 import org.example.smilegate.user.dto.UserDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "Users")
 public class User {
     @Id
@@ -23,6 +26,11 @@ public class User {
     @Column(nullable = false)
     String password;
     UserRole role;
+    String provider; // "naver", "google", "kakao"
+    String providerId;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projects = new ArrayList<>();
 
 
 

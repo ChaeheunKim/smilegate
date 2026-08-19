@@ -1,16 +1,16 @@
 package org.example.smilegate.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.smilegate.config.global.Oauth.OAuthService;
+import org.example.smilegate.user.domain.User;
 import org.example.smilegate.user.dto.UserDTO;
 import org.example.smilegate.user.service.EmailVerficationService;
+import org.example.smilegate.user.service.OauthService.OAuthServiceFactory;
 import org.example.smilegate.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final EmailVerficationService emailVerficationService;
+    private final OAuthServiceFactory oAuthServiceFactory;
 
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public UserDTO.UserLoginResponse Signin(@RequestBody UserDTO.UserLoginRequest request) throws IllegalAccessException {
+    public UserDTO.UserLoginResponse login(@RequestBody UserDTO.UserLoginRequest request) throws IllegalAccessException {
         try {
             UserDTO.UserLoginResponse response = userService.login(request);
             return response;
@@ -61,6 +62,17 @@ public class UserController {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @PostMapping(value = "/{provider}/callback")
+    public ResponseEntity<?> oauthCallback(@PathVariable String provider, @RequestParam String code, @RequestParam(required = false) String state ) {
+        OAuthService oAuthService = oAuthServiceFactory.getService(provider);
+
+        String accessToken = oAuthService.getAccessToken(code,state);
+        User user = oAuthService.getUserInfo(accessToken);
+
+        UserDTO.UserLoginResponse response = userService.SNSLogin(user, provider);
+        return ResponseEntity.ok(response);
     }
 
 }

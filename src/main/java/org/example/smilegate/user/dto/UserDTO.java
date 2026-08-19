@@ -26,11 +26,13 @@ public class UserDTO {
     @Setter
     @AllArgsConstructor
     public static class UserLoginResponse{
+        Long user_id;
         @Column(nullable = false)
         private String email;
         @Column(nullable = false)
         private String password;
         private String accesstoken;
+
 
     }
 

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.smilegate.project.dto.ProjectDTO;
+import org.example.smilegate.user.domain.User;
 
 
 import java.time.LocalDateTime;
@@ -38,6 +39,10 @@ public class Project extends BaseTimeEntity{
     Integer view_count;
     String reject_reason;
     int like_count;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Project(ProjectDTO.ProjectRequest request) {
         this.project_title=request.getProject_title();
