@@ -68,10 +68,10 @@ public class Project {
         }
     }
 
-    @GetMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping
     public ResponseEntity<?> home(){
-        List<ProjectDTO.HomeResponse> homeResponses = projectService.Getprojecthome();
         try{
+            List<ProjectDTO.HomeResponse> homeResponses = projectService.Getprojecthome();
             return ResponseEntity.status(HttpStatus.OK).body(homeResponses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글 조회에 실패했습니다." + e);
